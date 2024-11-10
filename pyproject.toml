@@ -63,6 +63,7 @@ dependencies = [
     "django>=4.0",
     "requests>=2.4.3",
     "urllib3>=1.25.0",  # requests dependency: fixes RFC 7578 header encoding
+    "typing_extensions>=4.12",  # for older Python compatibility
 ]
 
 [project.optional-dependencies]
@@ -74,6 +75,7 @@ brevo = []
 mailersend = []
 mailgun = []
 mailjet = []
+mailtrap = []
 mandrill = []
 postmark = []
 resend = ["svix"]

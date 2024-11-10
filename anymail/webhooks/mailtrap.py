@@ -1,6 +1,11 @@
 import json
+import sys
 from datetime import datetime, timezone
-from typing import Literal, NotRequired, TypedDict
+
+if sys.version_info < (3, 11):
+    from typing_extensions import Dict, Literal, NotRequired, TypedDict, Union
+else:
+    from typing import Dict, Literal, NotRequired, TypedDict, Union
 
 from ..signals import AnymailTrackingEvent, EventType, RejectReason, tracking
 from .base import AnymailBaseWebhookView
@@ -24,7 +29,7 @@ class MailtrapEvent(TypedDict):
     timestamp: int
     event_id: str
     category: NotRequired[str]
-    custom_variables: NotRequired[dict[str, str | int | float | bool]]
+    custom_variables: NotRequired[Dict[str, Union[str, int, float, bool]]]
     reason: NotRequired[str]
     response: NotRequired[str]
     response_code: NotRequired[int]

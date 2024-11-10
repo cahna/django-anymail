@@ -1,5 +1,10 @@
+import sys
 import warnings
-from typing import Any, Literal, NotRequired, TypedDict
+
+if sys.version_info < (3, 11):
+    from typing_extensions import Any, Dict, List, Literal, NotRequired, TypedDict
+else:
+    from typing import Any, Dict, List, Literal, NotRequired, TypedDict
 
 from ..exceptions import AnymailRequestsAPIError, AnymailWarning
 from ..message import AnymailMessage, AnymailRecipientStatus
@@ -24,18 +29,18 @@ MailtrapData = TypedDict(
     "MailtrapData",
     {
         "from": MailtrapAddress,
-        "to": NotRequired[list[MailtrapAddress]],
-        "cc": NotRequired[list[MailtrapAddress]],
-        "bcc": NotRequired[list[MailtrapAddress]],
-        "attachments": NotRequired[list[MailtrapAttachment]],
-        "headers": NotRequired[dict[str, str]],
-        "custom_variables": NotRequired[dict[str, str]],
+        "to": NotRequired[List[MailtrapAddress]],
+        "cc": NotRequired[List[MailtrapAddress]],
+        "bcc": NotRequired[List[MailtrapAddress]],
+        "attachments": NotRequired[List[MailtrapAttachment]],
+        "headers": NotRequired[Dict[str, str]],
+        "custom_variables": NotRequired[Dict[str, str]],
         "subject": str,
         "text": str,
         "html": NotRequired[str],
         "category": NotRequired[str],
         "template_id": NotRequired[str],
-        "template_variables": NotRequired[dict[str, Any]],
+        "template_variables": NotRequired[Dict[str, Any]],
     },
 )
 
