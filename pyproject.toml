@@ -26,6 +26,7 @@ keywords = [
     "Brevo", "SendinBlue",
     "MailerSend",
     "Mailgun", "Mailjet", "Sinch",
+    "Mailtrap",
     "Mandrill", "MailChimp",
     "Postal",
     "Postmark", "ActiveCampaign",

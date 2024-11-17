@@ -59,7 +59,6 @@ class MailtrapTrackingWebhookView(AnymailBaseWebhookView):
         "click": EventType.CLICKED,
         "bounce": EventType.BOUNCED,
         "soft bounce": EventType.DEFERRED,
-        "blocked": EventType.REJECTED,
         "spam": EventType.COMPLAINED,
         "unsubscribe": EventType.UNSUBSCRIBED,
         "reject": EventType.REJECTED,
@@ -73,6 +72,8 @@ class MailtrapTrackingWebhookView(AnymailBaseWebhookView):
         "spam": RejectReason.SPAM,
         "unsubscribe": RejectReason.UNSUBSCRIBED,
         "reject": RejectReason.BLOCKED,
+        "suspension": RejectReason.OTHER,
+        "soft bounce": RejectReason.OTHER,
     }
 
     def esp_to_anymail_event(self, esp_event: MailtrapEvent):
@@ -91,7 +92,7 @@ class MailtrapTrackingWebhookView(AnymailBaseWebhookView):
             event_id=esp_event.get("event_id", None),
             recipient=esp_event.get("email", None),
             reject_reason=reject_reason,
-            mta_response=esp_event.get("response_code", None),
+            mta_response=esp_event.get("response", None),
             tags=tags,
             metadata=custom_variables,
             click_url=esp_event.get("url", None),
