@@ -106,8 +106,10 @@ class MailtrapPayload(RequestsPayload):
     def set_subject(self, subject):
         self.data["subject"] = subject
 
-    def set_reply_to(self, emails):
-        self.unsupported_feature("Mailtrap does not support reply_to")
+    def set_reply_to(self, emails: List[EmailAddress]):
+        self.data["headers"]["Reply-To"] = ",".join(
+            str(email.addr_spec) for email in emails
+        )
 
     def set_extra_headers(self, headers):
         self.data.setdefault("headers", {}).update(headers)
