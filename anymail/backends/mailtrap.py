@@ -191,16 +191,6 @@ class EmailBackend(AnymailRequestsBackend):
             test_api_url += "/"
         self.test_api_url = test_api_url
 
-        bulk_api_url = get_anymail_setting(
-            "bulk_api_url",
-            esp_name=self.esp_name,
-            kwargs=kwargs,
-            default="https://bulk.api.mailtrap.io/api/",
-        )
-        if not bulk_api_url.endswith("/"):
-            bulk_api_url += "/"
-        self.bulk_api_url = bulk_api_url
-
         self.testing_enabled = get_anymail_setting(
             "testing",
             esp_name=self.esp_name,
@@ -216,7 +206,6 @@ class EmailBackend(AnymailRequestsBackend):
                 # (no default means required -- error if not set)
             )
             api_url = self.test_api_url
-            self.bulk_api_url = self.test_api_url
         else:
             self.test_inbox_id = None
 
