@@ -110,8 +110,8 @@ class MailtrapPayload(RequestsPayload):
         self.data["subject"] = subject
 
     def set_reply_to(self, emails: List[EmailAddress]):
-        self.data["headers"]["Reply-To"] = ",".join(
-            str(email.addr_spec) for email in emails
+        self.data.setdefault("headers", {})["Reply-To"] = ", ".join(
+            email.address for email in emails
         )
 
     def set_extra_headers(self, headers):
