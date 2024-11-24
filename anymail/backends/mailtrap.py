@@ -1,5 +1,4 @@
 import sys
-import warnings
 from urllib.parse import quote
 
 if sys.version_info < (3, 11):
@@ -7,7 +6,7 @@ if sys.version_info < (3, 11):
 else:
     from typing import Any, Dict, List, Literal, NotRequired, TypedDict
 
-from ..exceptions import AnymailRequestsAPIError, AnymailWarning
+from ..exceptions import AnymailRequestsAPIError
 from ..message import AnymailMessage, AnymailRecipientStatus
 from ..utils import Attachment, EmailAddress, get_anymail_setting, update_deep
 from .base_requests import AnymailRequestsBackend, RequestsPayload
@@ -138,6 +137,12 @@ class MailtrapPayload(RequestsPayload):
             att["disposition"] = "inline"
             att["content_id"] = attachment.cid
         self.data.setdefault("attachments", []).append(att)
+
+    def set_tags(self, tags: List[str]):
+        if len(tags) > 1:
+            self.unsupported_feature("multiple tags")
+        if len(tags) > 0:
+            self.data["category"] = tags[0]
 
     def set_metadata(self, metadata):
         self.data.setdefault("custom_variables", {}).update(
