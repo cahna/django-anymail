@@ -149,9 +149,6 @@ class MailtrapPayload(RequestsPayload):
         # Mailtrap requires integer (not string) TemplateID:
         self.data["template_id"] = template_id
 
-    def set_merge_data(self, merge_data):
-        self.data.setdefault("template_variables", {}).update(merge_data)
-
     def set_merge_global_data(self, merge_global_data):
         self.data.setdefault("template_variables", {}).update(merge_global_data)
 
