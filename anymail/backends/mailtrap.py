@@ -196,12 +196,6 @@ class EmailBackend(AnymailRequestsBackend):
             bulk_api_url += "/"
         self.bulk_api_url = bulk_api_url
 
-        self.test_inbox_id = get_anymail_setting(
-            "test_inbox_id",
-            esp_name=self.esp_name,
-            kwargs=kwargs,
-        )
-
         self.testing_enabled = get_anymail_setting(
             "testing",
             esp_name=self.esp_name,
@@ -210,14 +204,16 @@ class EmailBackend(AnymailRequestsBackend):
         )
 
         if self.testing_enabled:
-            if not self.test_inbox_id:
-                warnings.warn(
-                    "Mailtrap testing is enabled, but no test_inbox_id is set. "
-                    "You must set test_inbox_id for Mailtrap testing to work.",
-                    AnymailWarning,
-                )
+            self.test_inbox_id = get_anymail_setting(
+                "test_inbox_id",
+                esp_name=self.esp_name,
+                kwargs=kwargs,
+                # (no default means required -- error if not set)
+            )
             api_url = self.test_api_url
             self.bulk_api_url = self.test_api_url
+        else:
+            self.test_inbox_id = None
 
         super().__init__(api_url, **kwargs)
 
