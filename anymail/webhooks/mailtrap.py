@@ -79,7 +79,7 @@ class MailtrapTrackingWebhookView(AnymailBaseWebhookView):
     def esp_to_anymail_event(self, esp_event: MailtrapEvent):
         event_type = self.event_types.get(esp_event["event"], EventType.UNKNOWN)
         timestamp = datetime.fromtimestamp(esp_event["timestamp"], tz=timezone.utc)
-        reject_reason = self.reject_reasons.get(esp_event["event"], RejectReason.OTHER)
+        reject_reason = self.reject_reasons.get(esp_event["event"])
         custom_variables = esp_event.get("custom_variables", {})
         category = esp_event.get("category")
         tags = [category] if category else []
