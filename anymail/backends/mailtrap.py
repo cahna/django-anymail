@@ -62,6 +62,12 @@ class MailtrapPayload(RequestsPayload):
         # Yes, the parent sets this, but setting it here, too, gives type hints
         self.backend = backend
         self.metadata = None
+
+        # needed for backend.parse_recipient_status
+        self.recipients_to: List[str] = []
+        self.recipients_cc: List[str] = []
+        self.recipients_bcc: List[str] = []
+
         super().__init__(
             message, defaults, backend, *args, headers=http_headers, **kwargs
         )
@@ -99,11 +105,21 @@ class MailtrapPayload(RequestsPayload):
     def set_from_email(self, email: EmailAddress):
         self.data["from"] = self._mailtrap_email(email)
 
-    def add_recipient(
-        self, recipient_type: Literal["to", "cc", "bcc"], email: EmailAddress
+    def set_recipients(
+        self, recipient_type: Literal["to", "cc", "bcc"], emails: List[EmailAddress]
     ):
         assert recipient_type in ["to", "cc", "bcc"]
-        self.data.setdefault(recipient_type, []).append(self._mailtrap_email(email))
+        if emails:
+            self.data[recipient_type] = [
+                self._mailtrap_email(email) for email in emails
+            ]
+
+            if recipient_type == "to":
+                self.recipients_to = [email.addr_spec for email in emails]
+            elif recipient_type == "cc":
+                self.recipients_cc = [email.addr_spec for email in emails]
+            elif recipient_type == "bcc":
+                self.recipients_bcc = [email.addr_spec for email in emails]
 
     def set_subject(self, subject):
         self.data["subject"] = subject
@@ -228,9 +244,12 @@ class EmailBackend(AnymailRequestsBackend):
                 email_message=message, payload=payload, response=response, backend=self
             )
 
-        # Not the best status reporting. Mailtrap only says that the order of
-        # message-ids will be in this order (but JSON is unordered?)
-        recipient_status_order = [*message.to, *message.cc, *message.bcc]
+        # message-ids will be in this order
+        recipient_status_order = [
+            *payload.recipients_to,
+            *payload.recipients_cc,
+            *payload.recipients_bcc,
+        ]
         recipient_status = {
             email: AnymailRecipientStatus(
                 message_id=message_id,
