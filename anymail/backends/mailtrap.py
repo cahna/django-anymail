@@ -58,7 +58,6 @@ class MailtrapPayload(RequestsPayload):
             "Api-Token": backend.api_token,
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "User-Agent": "django-anymail (https://github.com/anymail/django-anymail)",
         }
         # Yes, the parent sets this, but setting it here, too, gives type hints
         self.backend = backend
