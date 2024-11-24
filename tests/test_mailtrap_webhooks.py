@@ -1,4 +1,3 @@
-import json
 from datetime import datetime, timezone
 from unittest.mock import ANY
 
@@ -16,7 +15,7 @@ class MailtrapWebhookSecurityTestCase(WebhookBasicAuthTestCase):
         return self.client.post(
             "/anymail/mailtrap/tracking/",
             content_type="application/json",
-            data=json.dumps({}),
+            data={},
         )
 
     # Actual tests are in WebhookBasicAuthTestCase
@@ -42,7 +41,7 @@ class MailtrapDeliveryTestCase(WebhookTestCase):
         response = self.client.post(
             "/anymail/mailtrap/tracking/",
             content_type="application/json",
-            data=json.dumps(payload),
+            data=payload,
         )
         self.assertEqual(response.status_code, 200)
         kwargs = self.assert_handler_called_once_with(
@@ -87,7 +86,7 @@ class MailtrapDeliveryTestCase(WebhookTestCase):
         response = self.client.post(
             "/anymail/mailtrap/tracking/",
             content_type="application/json",
-            data=json.dumps(payload),
+            data=payload,
         )
         self.assertEqual(response.status_code, 200)
         kwargs = self.assert_handler_called_once_with(
@@ -129,7 +128,7 @@ class MailtrapDeliveryTestCase(WebhookTestCase):
         response = self.client.post(
             "/anymail/mailtrap/tracking/",
             content_type="application/json",
-            data=json.dumps(payload),
+            data=payload,
         )
         self.assertEqual(response.status_code, 200)
         kwargs = self.assert_handler_called_once_with(
@@ -174,7 +173,7 @@ class MailtrapDeliveryTestCase(WebhookTestCase):
         response = self.client.post(
             "/anymail/mailtrap/tracking/",
             content_type="application/json",
-            data=json.dumps(payload),
+            data=payload,
         )
         self.assertEqual(response.status_code, 200)
         kwargs = self.assert_handler_called_once_with(
@@ -218,7 +217,7 @@ class MailtrapDeliveryTestCase(WebhookTestCase):
         response = self.client.post(
             "/anymail/mailtrap/tracking/",
             content_type="application/json",
-            data=json.dumps(payload),
+            data=payload,
         )
         self.assertEqual(response.status_code, 200)
         kwargs = self.assert_handler_called_once_with(
@@ -256,7 +255,7 @@ class MailtrapDeliveryTestCase(WebhookTestCase):
         response = self.client.post(
             "/anymail/mailtrap/tracking/",
             content_type="application/json",
-            data=json.dumps(payload),
+            data=payload,
         )
         self.assertEqual(response.status_code, 200)
         kwargs = self.assert_handler_called_once_with(
@@ -291,7 +290,7 @@ class MailtrapDeliveryTestCase(WebhookTestCase):
         response = self.client.post(
             "/anymail/mailtrap/tracking/",
             content_type="application/json",
-            data=json.dumps(payload),
+            data=payload,
         )
         self.assertEqual(response.status_code, 200)
         kwargs = self.assert_handler_called_once_with(
@@ -327,7 +326,7 @@ class MailtrapDeliveryTestCase(WebhookTestCase):
         response = self.client.post(
             "/anymail/mailtrap/tracking/",
             content_type="application/json",
-            data=json.dumps(payload),
+            data=payload,
         )
         self.assertEqual(response.status_code, 200)
         kwargs = self.assert_handler_called_once_with(
@@ -359,7 +358,7 @@ class MailtrapDeliveryTestCase(WebhookTestCase):
         response = self.client.post(
             "/anymail/mailtrap/tracking/",
             content_type="application/json",
-            data=json.dumps(payload),
+            data=payload,
         )
         self.assertEqual(response.status_code, 200)
         kwargs = self.assert_handler_called_once_with(
