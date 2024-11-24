@@ -1,5 +1,6 @@
 import sys
 import warnings
+from urllib.parse import quote
 
 if sys.version_info < (3, 11):
     from typing_extensions import Any, Dict, List, Literal, NotRequired, TypedDict
@@ -68,7 +69,8 @@ class MailtrapPayload(RequestsPayload):
 
     def get_api_endpoint(self):
         if self.backend.testing_enabled:
-            return f"send/{self.backend.test_inbox_id}"
+            test_inbox_id = quote(self.backend.test_inbox_id, safe="")
+            return f"send/{test_inbox_id}"
         return "send"
 
     def serialize_data(self):
