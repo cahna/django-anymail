@@ -160,6 +160,14 @@ class MailtrapPayload(RequestsPayload):
         if len(tags) > 0:
             self.data["category"] = tags[0]
 
+    def set_track_clicks(self, *args, **kwargs):
+        """Do nothing. Mailtrap supports this, but it is not configured in the send request."""
+        pass
+
+    def set_track_opens(self, *args, **kwargs):
+        """Do nothing. Mailtrap supports this, but it is not configured in the send request."""
+        pass
+
     def set_metadata(self, metadata):
         self.data.setdefault("custom_variables", {}).update(
             {str(k): str(v) for k, v in metadata.items()}
@@ -235,7 +243,8 @@ class EmailBackend(AnymailRequestsBackend):
     ):
         parsed_response = self.deserialize_json_response(response, payload, message)
 
-        if (
+        # TODO: how to handle fail_silently?
+        if not self.fail_silently and (
             not parsed_response.get("success")
             or ("errors" in parsed_response and parsed_response["errors"])
             or ("message_ids" not in parsed_response)
@@ -243,21 +252,21 @@ class EmailBackend(AnymailRequestsBackend):
             raise AnymailRequestsAPIError(
                 email_message=message, payload=payload, response=response, backend=self
             )
+        else:
+            # message-ids will be in this order
+            recipient_status_order = [
+                *payload.recipients_to,
+                *payload.recipients_cc,
+                *payload.recipients_bcc,
+            ]
+            recipient_status = {
+                email: AnymailRecipientStatus(
+                    message_id=message_id,
+                    status="sent",
+                )
+                for email, message_id in zip(
+                    recipient_status_order, parsed_response["message_ids"]
+                )
+            }
 
-        # message-ids will be in this order
-        recipient_status_order = [
-            *payload.recipients_to,
-            *payload.recipients_cc,
-            *payload.recipients_bcc,
-        ]
-        recipient_status = {
-            email: AnymailRecipientStatus(
-                message_id=message_id,
-                status="sent",
-            )
-            for email, message_id in zip(
-                recipient_status_order, parsed_response["message_ids"]
-            )
-        }
-
-        return recipient_status
+            return recipient_status
